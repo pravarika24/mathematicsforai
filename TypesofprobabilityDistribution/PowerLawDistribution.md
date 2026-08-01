@@ -1,0 +1,1 @@
+In statistics a power law is the functional relationship between two quantities, where a relative change in one quantity results in a proportional relative change in other quantity, independent of initial size of those quantities: one varies as power of another
