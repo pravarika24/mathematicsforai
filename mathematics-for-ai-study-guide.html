@@ -450,6 +450,43 @@
       <p>To go the other way — find the value <em>at</em> a given percentile <em>p</em> (even if it falls between two data points) — sort the data and use:</p>
       <div class="formula">\[ \text{position} = \frac{p}{100}\times (n+1) \]</div>
       <p>If the position isn't a whole number, interpolate between the two nearest ranked values. <strong>Quartiles</strong> are just the 25th, 50th and 75th percentiles: Q1, Q2 (the median) and Q3.</p>
+
+      <div class="example">
+        <span class="tag">Example — percentile rank</span>
+        Data: {12, 15, 18, 20, 22, 25, 30}. What's the percentile rank of 20?
+        <ul>
+          <li>3 values fall below 20 (12, 15, 18), and n = 7.</li>
+          <li>Percentile rank = (3 / 7) × 100 ≈ <strong>42.9</strong> — 20 sits at roughly the 43rd percentile.</li>
+        </ul>
+      </div>
+
+      <div class="example">
+        <span class="tag">Example — finding a value at a percentile (position falls between two points)</span>
+        Sorted data: 10, 20, 25, 30, 35, 40, 45, 50, 60 (n = 9). We want the <strong>35th percentile</strong>.
+        <p><strong>Step 1 — find the position:</strong></p>
+        <div class="formula">\[ \text{Position} = \frac{35}{100}(9+1) = 3.5 \]</div>
+        <p>This means the answer sits at position 3.5. But there is no "3.5th" value — position 3 has value 30, and position 4 has value 40, so the answer must lie somewhere between 30 and 40.</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+30 ------------------------ 40
+^                           ^
+Position 3              Position 4</pre>
+        <p><strong>Step 2 — what does the .5 mean?</strong> Position 3.5 is halfway between positions 3 and 4 — like walking from house #3 to house #4 and stopping at the midpoint.</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+House 3                 House 4
+30 ---------------------- 40
+            ^
+         Halfway</pre>
+        <p><strong>Step 3 — measure the distance and split it:</strong> the gap from 30 to 40 is 40 − 30 = 10 units. Half of that gap is 0.5 × 10 = 5.</p>
+        <p><strong>Step 4 — move from the lower value:</strong> start at 30 and move 5 units forward: 30 + 5 = <strong>35</strong>.</p>
+        <div class="formula">\[ 30 + 0.5(10) = 35 \]</div>
+        <p>So the 35th percentile of this dataset is <strong>35</strong>. In general, for a fractional position between value <em>L</em> (lower) and value <em>U</em> (upper), with fractional part <em>f</em>: value = <em>L</em> + <em>f</em> × (<em>U</em> − <em>L</em>).</p>
+      </div>
+
+      <div class="example">
+        <span class="tag">Example — quartiles</span>
+        Using the same dataset {10, 20, 25, 30, 35, 40, 45, 50, 60}: Q1 (25th percentile) position = 0.25 × 10 = 2.5 → halfway between 20 and 25 → Q1 = 22.5. Q2/median (50th percentile) position = 0.5 × 10 = 5 → the 5th value exactly → Q2 = 35. Q3 (75th percentile) position = 0.75 × 10 = 7.5 → halfway between 45 and 50 → Q3 = 47.5.
+      </div>
+
       <div class="controls">
         <div class="control" style="min-width:280px;">
           <label>Dataset (comma-separated)</label>
