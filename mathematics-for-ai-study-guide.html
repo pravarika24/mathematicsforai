@@ -735,15 +735,137 @@ House 3                 House 4
         <tr><td><strong>CDF</strong> — Cumulative Distribution Function</td><td>Either</td><td>P(X ≤ x) — everything accumulated up to and including x</td></tr>
       </table>
       <div class="example">
-        <span class="tag">Example — rolling a fair die</span>
-        PMF: P(1) = P(2) = … = P(6) = 1/6 for every face. CDF: P(X ≤ 2) = P(1) + P(2) = 1/6 + 1/6 = <strong>1/3</strong>.
+        <span class="tag">Example — PMF: rolling a fair die</span>
+        The die has 6 equally likely faces, so each single outcome gets an equal share of the total probability: P(1) = P(2) = … = P(6) = 1/6. Notice this answers "what's the probability of exactly this one value" — the defining feature of a PMF.
+        <p><strong>Map it out:</strong> six equal-height bars, one per face — that flatness IS the "fair" in fair die.</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+Outcome:    1      2      3      4      5      6
+P(X=x):   1/6    1/6    1/6    1/6    1/6    1/6
+
+            █      █      █      █      █      █
+            █      █      █      █      █      █
+        ----+------+------+------+------+------+----
+Every bar is the SAME height — no outcome is favored over another.</pre>
+      </div>
+      <div class="example">
+        <span class="tag">Example — CDF: rolling a fair die</span>
+        The CDF at x = 2 asks "what's the probability of rolling a 2 <em>or less</em>?" — so accumulate every PMF value up to and including x:
+        <div class="formula">\[ P(X \le 2) = P(1) + P(2) = \tfrac{1}{6} + \tfrac{1}{6} = \tfrac{1}{3} \]</div>
+        Keep accumulating and P(X ≤ 6) must equal 1 — by x = 6 you've swept up all the probability there is.
+        <p><strong>Map it out:</strong> each PMF bar gets stacked on top of the last, turning the flat PMF into a rising staircase:</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+P(X≤x)
+1.00 |                                   ______
+0.83 |                            ______|
+0.67 |                     ______|
+0.50 |              ______|
+0.33 |       ______|
+0.17 |______|
+     +------+------+------+------+------+------+---
+        1      2      3      4      5      6        x
+
+Each step up = one more 1/6 of probability swept in. By x = 6, every
+outcome has been counted, so the staircase tops out at exactly 1.</pre>
       </div>
       <div class="grid-2">
         <figure class="chart-mount" id="chart-pmf-dice"></figure>
         <figure class="chart-mount" id="chart-cdf-dice"></figure>
       </div>
       <figcaption>Left: PMF of a fair die (flat, each face 1/6). Right: its CDF — a rising staircase that reaches 1 at the last outcome.</figcaption>
+      <div class="example">
+        <span class="tag">Example — PDF: a continuous variable</span>
+        Say bus wait time is uniform between 0 and 10 minutes. There are infinitely many possible exact wait times, so P(wait = exactly 4.0000... min) = 0 — a single point has no width, so no area. Instead the PDF is a flat curve at height 0.1 across [0, 10], and probability comes from the <em>area under a range</em>: P(3 ≤ wait ≤ 5) = width × height = 2 × 0.1 = <strong>0.2</strong>.
+        <p><strong>Map it out:</strong> the shaded rectangle between minute 3 and minute 5 is the probability — not the curve's height at any single point:</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+density
+ 0.1 |░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░
+     |░░░░░░░░░░░░░▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░
+   0 +-----0------3------5------------------------10   minutes
+                   ^      ^
+              shaded area = width × height = 2 × 0.1 = 0.2
+              = P(3 ≤ wait ≤ 5)
+
+The single point at, say, minute 4 has zero width — no area, no
+probability. Only a RANGE under the curve gives you a real number.</pre>
+      </div>
       <div class="note-box">For a continuous variable, smoothing a histogram gives you a PDF; the slope (derivative) of the CDF at any point equals the probability density there — they're two views of the same distribution.</div>
+
+      <h4 style="margin:26px 0 6px;">How PMF, PDF &amp; CDF relate to each other</h4>
+      <p>These three aren't independent — each one can be built directly from another. There are three relationships worth knowing:</p>
+
+      <div class="example">
+        <span class="tag">1. PMF → CDF: the CDF is the running cumulation of the PMF</span>
+        For a discrete variable, add up the PMF step by step and you get the CDF. Each new outcome's PMF value gets stacked onto the total so far.
+        <div class="formula">\[ \text{CDF}(x) = P(X \le x) = \sum_{k \le x} \text{PMF}(k) \]</div>
+        <p><strong>Example — fair die:</strong> take the PMF (1/6 at every face) and accumulate it one face at a time:</p>
+        <table class="tbl">
+          <tr><th>x</th><th>PMF: P(X = x)</th><th>CDF: P(X ≤ x) = running sum</th></tr>
+          <tr><td>1</td><td>1/6</td><td>1/6 ≈ 0.167</td></tr>
+          <tr><td>2</td><td>1/6</td><td>1/6 + 1/6 = 2/6 ≈ 0.333</td></tr>
+          <tr><td>3</td><td>1/6</td><td>3/6 = 0.500</td></tr>
+          <tr><td>4</td><td>1/6</td><td>4/6 ≈ 0.667</td></tr>
+          <tr><td>5</td><td>1/6</td><td>5/6 ≈ 0.833</td></tr>
+          <tr><td>6</td><td>1/6</td><td>6/6 = <strong>1.000</strong></td></tr>
+        </table>
+        <p>Each CDF entry is just the previous CDF entry plus the new PMF value. That's why the CDF looks like a staircase: every PMF bar becomes one more "step up."</p>
+      </div>
+
+      <div class="example">
+        <span class="tag">2. CDF → PDF: the PDF is the gradient (slope) of the CDF</span>
+        For a continuous variable, the PDF at any point is the derivative of the CDF there — how steeply the accumulated probability is rising at that instant.
+        <div class="formula">\[ \text{PDF}(x) = \frac{d}{dx}\,\text{CDF}(x) \]</div>
+        <p><strong>Example — bus wait time, uniform on [0, 10]:</strong> because every minute is equally likely, probability accumulates at a constant rate, so the CDF is a straight ramp: CDF(x) = x/10 for 0 ≤ x ≤ 10 (e.g. CDF(3) = 0.3, CDF(5) = 0.5). Its slope is constant everywhere:</p>
+        <div class="formula">\[ \text{PDF}(x) = \frac{d}{dx}\left(\frac{x}{10}\right) = \frac{1}{10} = 0.1 \]</div>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+CDF(x)                                PDF(x)
+1.0 |                    ___/         0.1 |______________________
+    |               ___/                  |
+0.5 |          ___/            <——►        |   constant height = slope
+    |     ___/                             |     of the CDF ramp
+0.0 |__/______________                   0 +______________________
+    0    3   5        10  minutes         0    3   5        10  minutes
+
+The CDF's constant slope (rise/run = 1/10 over each minute) IS the
+PDF's constant height. A steeper CDF would mean a taller PDF there.</pre>
+        <p><strong>Why the CDF is usually drawn as an "S curve":</strong> the ramp above is a special case because the uniform PDF is perfectly flat, so its CDF has one constant slope. Most real distributions — like a bell-shaped Normal curve — have a PDF that's low in the tails and tall in the middle. Since the CDF's slope at each point equals the PDF's height there, the CDF must climb <em>slowly</em> where the PDF is low, and <em>steeply</em> where the PDF is tall. That slow → steep → slow pattern is exactly what draws an S shape (a sigmoid).</p>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+PDF (bell-shaped / Normal)              CDF (S-curve)
+density                                  P(X≤x)
+      |          ▄▄▄▄▄                  1.0 |                    _______
+      |        ▄▄     ▄▄                    |               __--
+      |      ▄▄         ▄▄               0.5 |          __--
+      |    ▄▄             ▄▄                 |     __--
+      |  ▄▄                 ▄▄            0.0 |__--
+      +---+---+---+---+---+---+---            +---+---+---+---+---+---+---
+       -3  -2  -1   0   1   2   3  z            -3  -2  -1   0   1   2   3  z
+
+Tails (PDF low)  → CDF barely rises      → flat sections of the S
+Middle (PDF tall, at the mean) → CDF rises fastest → the steep middle of the S
+Tails again (PDF low)  → CDF flattens out near 1  → the top of the S
+
+The CDF's slope literally traces out the PDF's shape, point for point:
+flat-low-flat PDF regions become flat CDF regions; the PDF's peak
+becomes the CDF's steepest climb.</pre>
+      </div>
+
+      <div class="example">
+        <span class="tag">3. PDF → CDF: the CDF is the area under the PDF to the left of x</span>
+        Going the other direction, integrate (sum up area under) the PDF from the start up to x, and you get the CDF at x.
+        <div class="formula">\[ \text{CDF}(x) = P(X \le x) = \int_{-\infty}^{x} \text{PDF}(t)\, dt \]</div>
+        <p><strong>Example — same bus wait time:</strong> the PDF is flat at height 0.1. The area under it from 0 up to some point x is just a rectangle: width x, height 0.1.</p>
+        <div class="formula">\[ \text{CDF}(5) = \int_{0}^{5} 0.1\, dt = 0.1 \times 5 = 0.5 \]</div>
+        <pre style="background:var(--surface-1); color:var(--text-primary); border:1px solid var(--border); padding:10px 14px; border-radius:6px; overflow-x:auto; font-family:monospace;">
+density
+0.1 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░
+    |▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░
+  0 +-----------------5------------------------10   minutes
+     ^________________^
+     shaded area (all of it, to the LEFT of x=5)
+     = 5 × 0.1 = 0.5 = CDF(5) = P(wait ≤ 5)</pre>
+        <p>Notice the shading here covers everything from 0 up to x — unlike the earlier PDF example, which only shaded the strip between two points. The CDF at x is always the <em>total</em> area swept up to that point, while a probability like P(3 ≤ wait ≤ 5) is the area of just that one slice, which also equals CDF(5) − CDF(3).</p>
+      </div>
+
+      <div class="note-box"><strong>In one line:</strong> cumulating a PMF gives a CDF; differentiating (taking the slope of) a CDF gives a PDF; integrating (taking the area under) a PDF gives a CDF back. PMF and PDF describe probability "locally" (at a point or a density); the CDF is the same information viewed as a running total.</div>
     </div>
   </article>
 
